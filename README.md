@@ -13,3 +13,4 @@
 6. Action Layer — gRPC or REST calls to your core banking/payment system to block, flag, or trigger step-up authentication. PagerDuty or Slack webhooks to alert analysts.<br><br>
 7. Observability — Prometheus + Grafana for latency and throughput, MLflow for model drift monitoring, and a custom audit log (append-only) for regulatory compliance. Every agent decision should be stored with its full reasoning chain.<br>
 
+<img width="750" height="347" alt="image" src="https://github.com/user-attachments/assets/a01cb97b-4d57-4512-a3a0-576eedc94da1" />
