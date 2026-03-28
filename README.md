@@ -1,16 +1,159 @@
-# Agentic-Risk-Detection
+# Agentic Fraud Detection System
 
-# Architecture
+A production-grade multi-agent fraud detection pipeline that scores payment transactions in real-time using parallel ML agents, deterministic rules, and an LLM decision layer that generates natural language explanations.
 
-<img width="759" height="579" alt="image" src="https://github.com/user-attachments/assets/efe387a6-ffde-432c-b644-7eb940f6e698" />
+**[Live Demo](https://agentic-risk-detection-production.up.railway.app/dashboard)** · **[API Docs](https://agentic-risk-detection-production.up.railway.app/docs)**
 
-# Tech Stack
-1. Data & Streaming — Apache Kafka for real-time event ingestion, Apache Flink or Spark Streaming for stateful stream processing, and Feast or Tecton as your feature store to serve pre-computed features at low latency. <br><br>
-2. ML Models (inside agents) — XGBoost/LightGBM for tabular anomaly scoring, PyTorch Graph Neural Networks (GraphSAGE or GAT) for the graph agent, and scikit-learn or Isolation Forest for unsupervised anomaly baselines. These run as microservices behind the agents.<br><br>
-3. The Agentic Layer — This is where Claude or GPT-4 class models live. You use the LLM as the orchestrator and decision agent. Each specialist agent gets a set of tools (function calls) like query_feature_store, run_ml_model, lookup_graph_neighbors, check_rule_engine. The orchestrator decides which agents to invoke, collects results, and reasons over them. Frameworks: LangGraph, CrewAI, or a custom implementation using the Anthropic or OpenAI API directly. <br><br>
-4. Memory & State — Redis for short-term session state (is this the 5th failed attempt in 2 minutes?), Pinecone or Weaviate as a vector store for semantic similarity (does this transaction look like known fraud patterns?), and a time-series DB like TimescaleDB for behavioral history.<br><br>
-5. Graph Database — Neo4j or Amazon Neptune to store entity relationships — devices, accounts, IPs, merchants — and detect ring fraud, money mule networks, and account takeover chains.<br><br>
-6. Action Layer — gRPC or REST calls to your core banking/payment system to block, flag, or trigger step-up authentication. PagerDuty or Slack webhooks to alert analysts.<br><br>
-7. Observability — Prometheus + Grafana for latency and throughput, MLflow for model drift monitoring, and a custom audit log (append-only) for regulatory compliance. Every agent decision should be stored with its full reasoning chain.<br>
+---
 
-<img width="750" height="347" alt="image" src="https://github.com/user-attachments/assets/a01cb97b-4d57-4512-a3a0-576eedc94da1" />
+## How it works
+
+```
+Transaction  →  Anomaly Agent  ─┐
+                                 ├→  Decision Agent (Llama 3.3 70B)  →  APPROVE / BLOCK / REVIEW
+             →  Rules Agent   ─┘
+```
+
+Two specialist agents run in parallel on every transaction. Their signals are aggregated by a weighted decision agent powered by Groq/Llama 3.3 70B, which produces a risk score and a plain-English explanation of why the transaction was flagged.
+
+---
+
+## Fraud patterns detected
+
+| Pattern | Description |
+|---|---|
+| Velocity attack | 8–15 micro-transactions followed by a large fraud hit |
+| Geo impossibility | Same user transacts in two countries within 2 hours |
+| High-value anomaly | Large transaction, off-hours, card-not-present |
+| Card testing | Rapid micro-transactions probing a stolen card |
+| High-risk country | Transaction from a known high-fraud-rate region |
+
+---
+
+## Tech stack
+
+| Layer | Technologies |
+|---|---|
+| ML Models | XGBoost, Isolation Forest, scikit-learn |
+| Feature Engineering | Pandas, NumPy — velocity windows, z-scores, geo risk |
+| Agentic Layer | Custom multi-agent framework, ThreadPoolExecutor |
+| LLM | Groq API — Llama 3.3 70B |
+| API | FastAPI, Uvicorn, Pydantic |
+| Frontend | Vanilla JS dashboard — real-time feed + agent signal breakdown |
+| Deployment | Railway, CI/CD via GitHub |
+
+---
+
+## Project structure
+
+```
+fraud_detection/
+├── config.py                 ← all tuneable parameters
+├── data/
+│   └── simulator.py          ← synthetic transaction generator (3 fraud patterns)
+├── models/
+│   ├── features.py           ← 23-feature engineering pipeline
+│   ├── trainer.py            ← XGBoost + Isolation Forest training
+│   └── artifacts/            ← saved model files (generated)
+├── agents/
+│   ├── base.py               ← BaseAgent abstract class
+│   ├── anomaly_agent.py      ← ML-based scoring (XGBoost + IF blended)
+│   ├── rules_agent.py        ← 7 deterministic rules with velocity tracking
+│   ├── decision_agent.py     ← LLM aggregation + explanation generation
+│   └── pipeline.py           ← parallel orchestrator
+└── api/
+    ├── app.py                ← FastAPI REST endpoints
+    └── dashboard.html        ← live monitoring dashboard
+```
+
+---
+
+## API endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/health` | Liveness check |
+| `GET` | `/stats` | Live decision counters + avg latency |
+| `POST` | `/evaluate` | Score a single transaction |
+| `POST` | `/evaluate/batch` | Score up to 100 transactions |
+| `GET` | `/dashboard` | Live monitoring UI |
+
+### Example request
+
+```bash
+curl -X POST https://agentic-risk-detection-production.up.railway.app/evaluate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user_id": "user_0001",
+    "merchant_id": "merch_0042",
+    "merchant_category": "electronics",
+    "amount": 1899.99,
+    "country": "NG",
+    "city": "Lagos",
+    "is_online": true,
+    "card_present": false
+  }'
+```
+
+### Example response
+
+```json
+{
+  "transaction_id": "6be81a79-...",
+  "decision": "block",
+  "risk_score": 0.57,
+  "risk_level": "medium",
+  "explanation": "This transaction raises significant fraud concerns...",
+  "flags": [
+    "R01: High amount $1899.99 (>500.0)",
+    "R02: Off-hours transaction at 03:00",
+    "R03: High-risk country (NG)",
+    "R04: Card-not-present online txn"
+  ],
+  "processing_time_ms": 157.76
+}
+```
+
+---
+
+## Local setup
+
+```bash
+# Clone and set up environment
+git clone https://github.com/sayampalrecha/agentic-risk-detection.git
+cd agentic-risk-detection
+python -m venv fraud && source fraud/bin/activate
+pip install -r requirements.txt && pip install -e .
+
+# Configure
+cp .env.example .env
+# Add your GROQ_API_KEY to .env
+
+# Generate data and train models
+python -m fraud_detection.data.simulator
+python -m fraud_detection.models.trainer
+
+# Run the pipeline demo
+python -m fraud_detection.agents.pipeline
+
+# Start the API
+uvicorn fraud_detection.api.app:app --reload
+# Open http://localhost:8000/dashboard
+```
+
+---
+
+## LLM configuration
+
+Set `LLM_PROVIDER` in `.env` to switch providers:
+
+| Provider | Value | Key needed |
+|---|---|---|
+| Groq (Llama 3.3 70B) | `groq` | `GROQ_API_KEY` |
+| Anthropic (Claude) | `anthropic` | `ANTHROPIC_API_KEY` |
+| OpenAI | `openai` | `OPENAI_API_KEY` |
+| No LLM (rule-based) | `mock` | none |
+
+---
+
+Built by [Sayam Palrecha](https://linkedin.com/in/sayampalrecha/)
