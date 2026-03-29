@@ -645,6 +645,50 @@ function selectTransaction(id){
   const entry=transactions.find(t=>t.transaction_id===id);
   if(entry) renderDetail(entry);
 }
+function decisionReasoning(entry){
+  const score = entry.risk_score;
+  const d = entry.decision;
+  const thresholds = [
+    {label:'APPROVE',min:0,max:0.3,color:'var(--green)'},
+    {label:'REVIEW',min:0.3,max:0.5,color:'var(--amber)'},
+    {label:'STEP-UP',min:0.5,max:0.7,color:'var(--cyan)'},
+    {label:'BLOCK',min:0.7,max:1.0,color:'var(--red)'},
+  ];
+  const bars = thresholds.map(t => {
+    const active = d.toUpperCase().replace('_','-') === t.label || (d==='block'&&t.label==='BLOCK');
+    const width = Math.round((t.max - t.min) * 100);
+    const filled = score >= t.min;
+    return `<div style="display:flex;flex-direction:column;gap:3px;flex:${width}">
+      <div style="height:6px;background:${filled?t.color:'var(--border)'};opacity:${active?1:0.4};transition:all 0.4s"></div>
+      <div style="font-size:8px;color:${active?t.color:'var(--muted)'};letter-spacing:0.06em;font-weight:${active?500:400}">${t.label}</div>
+    </div>`;
+  }).join('');
+  const why = {
+    approve: 'All agent signals within normal thresholds. No rules triggered.',
+    review:  'One or more signals elevated. Recommended for human analyst review.',
+    step_up: 'Medium-high risk detected on an online channel. Step-up authentication required.',
+    block:   'Risk score exceeds block threshold or a HIGH severity signal was triggered.',
+  };
+  return `<div style="display:flex;flex-direction:column;gap:10px;">
+    <div style="display:flex;gap:4px;align-items:flex-end">${bars}</div>
+    <div style="font-size:10px;color:var(--muted);line-height:1.6">${why[entry.decision]||''}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+      <div style="padding:6px 8px;background:var(--bg);border:1px solid var(--border);display:flex;flex-direction:column;gap:2px">
+        <div style="font-size:8px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase">Anomaly agent</div>
+        <div style="font-size:11px;font-weight:500;color:var(--text)">${(entry.agent_signals?.find(s=>s.agent_name==='anomaly_agent')?.risk_score??0).toFixed(3)}</div>
+      </div>
+      <div style="padding:6px 8px;background:var(--bg);border:1px solid var(--border);display:flex;flex-direction:column;gap:2px">
+        <div style="font-size:8px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase">Rules agent</div>
+        <div style="font-size:11px;font-weight:500;color:var(--text)">${(entry.agent_signals?.find(s=>s.agent_name==='rules_agent')?.risk_score??0).toFixed(3)}</div>
+      </div>
+      <div style="padding:6px 8px;background:var(--bg);border:1px solid var(--border);display:flex;flex-direction:column;gap:2px">
+        <div style="font-size:8px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase">Weighted</div>
+        <div style="font-size:11px;font-weight:500;color:var(--text)">${entry.risk_score.toFixed(3)}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
 function renderDetail(entry){
   document.getElementById('detail-id').textContent=entry.transaction_id.slice(0,8)+'…';
   const colors={approve:'var(--green)',block:'var(--red)',review:'var(--amber)',step_up:'var(--cyan)'};
@@ -669,7 +713,11 @@ function renderDetail(entry){
     </div>
     <div class="detail-score-bar">
       <div class="score-track"><div class="score-fill" style="width:${Math.round(entry.risk_score*100)}%;background:${scoreColor}"></div></div>
-      <div class="score-labels"><span>0.0 safe</span><span>0.3</span><span>0.7</span><span>1.0 fraud</span></div>
+      <div class="score-labels"><span>0.0 safe</span><span>0.3 review</span><span>0.7 block</span><span>1.0</span></div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Decision reasoning</div>
+      ${decisionReasoning(entry)}
     </div>
     <div class="detail-section">
       <div class="detail-section-title">Agent signals</div>
