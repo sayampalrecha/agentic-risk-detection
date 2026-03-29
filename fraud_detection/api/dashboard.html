@@ -8,7 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
     --bg:       #080b0f;
     --bg2:      #0d1117;
@@ -25,26 +24,16 @@
     --font-mono: 'IBM Plex Mono', monospace;
     --font-sans: 'IBM Plex Sans', sans-serif;
   }
-
   html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font-mono); overflow-x: hidden; }
-
-  /* ── grid noise overlay ── */
   body::before {
-    content: '';
-    position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    background-image:
-      linear-gradient(rgba(0,212,255,0.015) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,212,255,0.015) 1px, transparent 1px);
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: linear-gradient(rgba(0,212,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.015) 1px, transparent 1px);
     background-size: 40px 40px;
   }
-
-  /* ── scanline ── */
   body::after {
-    content: '';
-    position: fixed; inset: 0; pointer-events: none; z-index: 999;
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 999;
     background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
   }
-
   .shell { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; }
 
   /* ── header ── */
@@ -54,27 +43,16 @@
     background: rgba(8,11,15,0.95); position: sticky; top: 0; z-index: 10;
   }
   .logo { display: flex; align-items: center; gap: 12px; }
-  .logo-mark {
-    width: 28px; height: 28px; border: 1.5px solid var(--accent);
-    display: grid; place-items: center; position: relative;
-  }
-  .logo-mark::before {
-    content: ''; width: 10px; height: 10px; background: var(--accent);
-    animation: pulse-dot 2s ease-in-out infinite;
-  }
+  .logo-mark { width: 28px; height: 28px; border: 1.5px solid var(--accent); display: grid; place-items: center; }
+  .logo-mark::before { content: ''; width: 10px; height: 10px; background: var(--accent); animation: pulse-dot 2s ease-in-out infinite; }
   @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.6)} }
-  .logo-text { font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text); }
+  .logo-text { font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; }
   .logo-sub { font-size: 10px; color: var(--muted); letter-spacing: 0.08em; }
-
-  .header-right { display: flex; align-items: center; gap: 24px; }
-  .status-pill {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 11px; letter-spacing: 0.06em; color: var(--muted);
-  }
+  .header-right { display: flex; align-items: center; gap: 16px; }
+  .status-pill { display: flex; align-items: center; gap: 6px; font-size: 11px; letter-spacing: 0.06em; color: var(--muted); }
   .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 2s ease-in-out infinite; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
   .status-dot.offline { background: var(--red); animation: none; }
-
   .sim-controls { display: flex; gap: 8px; }
   button {
     font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
@@ -84,17 +62,15 @@
   button:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,212,255,0.05); }
   button.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
   button:disabled { opacity: 0.3; cursor: not-allowed; }
+  button.btn-submit-txn { border-color: var(--accent); color: var(--accent); }
+  button.btn-submit-txn:hover { background: var(--accent); color: var(--bg); }
 
-  /* ── main layout ── */
+  /* ── main ── */
   main { flex: 1; display: grid; grid-template-columns: 1fr 380px; grid-template-rows: auto 1fr; gap: 0; }
 
-  /* ── metrics row ── */
+  /* ── metrics ── */
   .metrics { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(5, 1fr); border-bottom: 1px solid var(--border); }
-  .metric {
-    padding: 20px 24px; border-right: 1px solid var(--border);
-    display: flex; flex-direction: column; gap: 6px;
-    transition: background 0.2s;
-  }
+  .metric { padding: 20px 24px; border-right: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; transition: background 0.2s; }
   .metric:last-child { border-right: none; }
   .metric:hover { background: rgba(255,255,255,0.02); }
   .metric-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
@@ -102,7 +78,6 @@
   .metric-sub { font-size: 10px; color: var(--muted); }
   .metric-value.flash { animation: flash-val 0.4s ease; }
   @keyframes flash-val { 0%{color:var(--accent)} 100%{color:inherit} }
-
   .val-total { color: var(--text); }
   .val-approve { color: var(--green); }
   .val-block { color: var(--red); }
@@ -118,101 +93,177 @@
   }
   .feed { flex: 1; overflow-y: auto; }
   .feed::-webkit-scrollbar { width: 4px; }
-  .feed::-webkit-scrollbar-track { background: transparent; }
   .feed::-webkit-scrollbar-thumb { background: var(--border2); }
-
   .txn-row {
-    display: grid;
-    grid-template-columns: 80px 1fr 90px 80px 70px;
-    gap: 0; padding: 12px 24px; border-bottom: 1px solid var(--border);
+    display: grid; grid-template-columns: 80px 1fr 90px 80px 70px;
+    padding: 12px 24px; border-bottom: 1px solid var(--border);
     font-size: 11px; cursor: pointer; transition: background 0.15s;
     animation: slide-in 0.3s ease;
   }
-  @keyframes slide-in { from { opacity:0; transform:translateX(-8px); } to { opacity:1; transform:translateX(0); } }
+  @keyframes slide-in { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
   .txn-row:hover { background: rgba(255,255,255,0.03); }
   .txn-row.selected { background: rgba(0,212,255,0.05); border-left: 2px solid var(--accent); padding-left: 22px; }
-
   .txn-time { color: var(--muted); font-size: 10px; padding-top: 1px; }
   .txn-main { display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
-  .txn-user { font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .txn-user { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .txn-merchant { color: var(--muted); font-size: 10px; }
   .txn-amount { font-weight: 600; text-align: right; padding-top: 1px; }
   .txn-country { color: var(--muted); text-align: center; padding-top: 1px; }
-  .txn-badge {
-    padding: 2px 8px; font-size: 9px; letter-spacing: 0.08em;
-    text-transform: uppercase; align-self: start; justify-self: end; font-weight: 600;
-  }
+  .txn-badge { padding: 2px 8px; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; align-self: start; justify-self: end; font-weight: 600; }
   .badge-approve { color: var(--green); border: 1px solid rgba(0,230,118,0.3); background: rgba(0,230,118,0.07); }
-  .badge-block   { color: var(--red);   border: 1px solid rgba(255,82,82,0.3);  background: rgba(255,82,82,0.07);  }
+  .badge-block   { color: var(--red);   border: 1px solid rgba(255,82,82,0.3);  background: rgba(255,82,82,0.07); }
   .badge-review  { color: var(--amber); border: 1px solid rgba(255,171,64,0.3); background: rgba(255,171,64,0.07); }
   .badge-step_up { color: var(--cyan);  border: 1px solid rgba(64,196,255,0.3); background: rgba(64,196,255,0.07); }
+  .feed-empty { padding: 40px 24px; text-align: center; color: var(--muted); font-size: 11px; line-height: 2; }
 
   /* ── detail panel ── */
   .detail-panel { display: flex; flex-direction: column; overflow: hidden; }
   .detail-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
   .detail-content::-webkit-scrollbar { width: 4px; }
   .detail-content::-webkit-scrollbar-thumb { background: var(--border2); }
-
-  .detail-empty {
-    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    color: var(--muted); gap: 8px; font-size: 11px; letter-spacing: 0.06em;
-  }
-  .detail-empty-icon { font-size: 32px; opacity: 0.2; margin-bottom: 8px; font-family: monospace; }
-
-  .detail-decision {
-    padding: 14px 16px; display: flex; align-items: center; justify-content: space-between;
-    border: 1px solid var(--border);
-  }
+  .detail-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); gap: 8px; font-size: 11px; }
+  .detail-empty-icon { font-size: 32px; opacity: 0.2; margin-bottom: 8px; }
+  .detail-decision { padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border); }
   .detail-decision-label { font-size: 10px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
-  .detail-decision-value { font-size: 18px; font-weight: 600; letter-spacing: 0.04em; }
-
+  .detail-decision-value { font-size: 18px; font-weight: 600; }
   .detail-score-bar { display: flex; flex-direction: column; gap: 8px; }
-  .score-track { height: 4px; background: var(--border); position: relative; overflow: visible; }
-  .score-fill { height: 100%; transition: width 0.6s ease; position: relative; }
-  .score-fill::after { content: ''; position: absolute; right: -1px; top: -4px; width: 2px; height: 12px; background: inherit; }
+  .score-track { height: 4px; background: var(--border); }
+  .score-fill { height: 100%; transition: width 0.6s ease; }
   .score-labels { display: flex; justify-content: space-between; font-size: 9px; color: var(--muted); }
-
   .detail-section { display: flex; flex-direction: column; gap: 8px; }
   .detail-section-title { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); padding-bottom: 6px; border-bottom: 1px solid var(--border); }
-
   .agent-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
   .agent-row:last-child { border-bottom: none; }
   .agent-name { font-size: 10px; color: var(--muted); width: 100px; flex-shrink: 0; }
   .agent-bar-track { flex: 1; height: 3px; background: var(--border); }
   .agent-bar-fill { height: 100%; transition: width 0.5s ease; }
   .agent-score-val { font-size: 11px; font-weight: 500; width: 36px; text-align: right; }
-
   .flags-list { display: flex; flex-direction: column; gap: 4px; }
-  .flag-item {
-    font-size: 10px; padding: 6px 10px; border-left: 2px solid var(--amber);
-    background: rgba(255,171,64,0.05); color: var(--text); line-height: 1.4;
-  }
+  .flag-item { font-size: 10px; padding: 6px 10px; border-left: 2px solid var(--amber); background: rgba(255,171,64,0.05); line-height: 1.4; }
   .flag-item.high { border-color: var(--red); background: rgba(255,82,82,0.05); }
-
-  .explanation-box {
-    font-size: 11px; line-height: 1.7; color: var(--text);
-    padding: 12px; border: 1px solid var(--border); background: var(--bg2);
-    font-family: var(--font-sans);
-  }
-
+  .explanation-box { font-size: 11px; line-height: 1.7; padding: 12px; border: 1px solid var(--border); background: var(--bg2); font-family: var(--font-sans); }
   .txn-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
   .txn-field { display: flex; flex-direction: column; gap: 2px; padding: 8px; background: var(--bg2); border: 1px solid var(--border); }
   .txn-field-key { font-size: 9px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
-  .txn-field-val { font-size: 11px; color: var(--text); font-weight: 500; }
+  .txn-field-val { font-size: 11px; font-weight: 500; }
 
-  /* ── empty state & loading ── */
-  .feed-empty { padding: 40px 24px; text-align: center; color: var(--muted); font-size: 11px; line-height: 2; }
+  /* ── drawer overlay ── */
+  .drawer-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+    z-index: 200; backdrop-filter: blur(2px);
+  }
+  .drawer-overlay.open { display: block; animation: fade-in 0.2s ease; }
+  @keyframes fade-in { from{opacity:0} to{opacity:1} }
 
-  /* ── risk score color helpers ── */
-  .risk-low    { color: var(--green); }
-  .risk-medium { color: var(--amber); }
-  .risk-high   { color: var(--red); }
+  /* ── drawer ── */
+  .drawer {
+    position: fixed; top: 0; right: -480px; width: 460px; height: 100vh;
+    background: var(--bg2); border-left: 1px solid var(--border);
+    z-index: 201; display: flex; flex-direction: column;
+    transition: right 0.3s cubic-bezier(0.4,0,0.2,1);
+    overflow-y: auto;
+  }
+  .drawer.open { right: 0; }
+  .drawer::-webkit-scrollbar { width: 4px; }
+  .drawer::-webkit-scrollbar-thumb { background: var(--border2); }
+
+  .drawer-header {
+    padding: 20px 24px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; background: var(--bg2); z-index: 1;
+  }
+  .drawer-title { font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); }
+  .drawer-close {
+    width: 28px; height: 28px; border: 1px solid var(--border2); background: transparent;
+    color: var(--muted); cursor: pointer; font-size: 16px; display: grid; place-items: center;
+    padding: 0; letter-spacing: 0;
+  }
+  .drawer-close:hover { border-color: var(--red); color: var(--red); background: rgba(255,82,82,0.05); }
+
+  .drawer-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+
+  /* ── preset scenarios ── */
+  .presets { display: flex; flex-direction: column; gap: 8px; }
+  .presets-label { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .preset-btn {
+    padding: 8px 10px; border: 1px solid var(--border); background: var(--bg);
+    color: var(--muted); font-size: 10px; text-align: left; cursor: pointer;
+    transition: all 0.15s; letter-spacing: 0.02em; text-transform: none;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .preset-btn:hover { border-color: var(--accent); color: var(--text); background: rgba(0,212,255,0.03); }
+  .preset-btn .preset-name { font-weight: 500; color: var(--text); font-size: 10px; }
+  .preset-btn .preset-desc { color: var(--muted); font-size: 9px; }
+  .preset-btn.danger .preset-name { color: var(--red); }
+  .preset-btn.danger { border-color: rgba(255,82,82,0.2); }
+  .preset-btn.danger:hover { border-color: var(--red); background: rgba(255,82,82,0.03); }
+  .preset-btn.warning .preset-name { color: var(--amber); }
+  .preset-btn.warning { border-color: rgba(255,171,64,0.2); }
+  .preset-btn.warning:hover { border-color: var(--amber); background: rgba(255,171,64,0.03); }
+
+  /* ── form fields ── */
+  .form-divider { height: 1px; background: var(--border); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-field { display: flex; flex-direction: column; gap: 6px; }
+  .form-field.full { grid-column: 1 / -1; }
+  .form-label { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .form-input {
+    font-family: var(--font-mono); font-size: 12px; color: var(--text);
+    background: var(--bg); border: 1px solid var(--border2); padding: 9px 12px;
+    outline: none; transition: border-color 0.15s; width: 100%;
+  }
+  .form-input:focus { border-color: var(--accent); }
+  .form-input::placeholder { color: var(--muted); }
+  select.form-input { cursor: pointer; }
+
+  /* ── toggles ── */
+  .toggle-row { display: flex; align-items: center; justify-content: space-between; }
+  .toggle-label { font-size: 11px; color: var(--text); }
+  .toggle-wrap { position: relative; width: 36px; height: 20px; }
+  .toggle-wrap input { opacity: 0; width: 0; height: 0; }
+  .toggle-track {
+    position: absolute; inset: 0; background: var(--border2);
+    cursor: pointer; transition: background 0.2s; border-radius: 10px;
+  }
+  .toggle-track::before {
+    content: ''; position: absolute; width: 14px; height: 14px;
+    left: 3px; top: 3px; background: var(--muted);
+    transition: all 0.2s; border-radius: 50%;
+  }
+  input:checked + .toggle-track { background: var(--accent); }
+  input:checked + .toggle-track::before { transform: translateX(16px); background: var(--bg); }
+
+  /* ── submit button ── */
+  .btn-evaluate {
+    width: 100%; padding: 12px; font-size: 12px; font-weight: 500;
+    letter-spacing: 0.1em; background: var(--accent); color: var(--bg);
+    border: none; cursor: pointer; transition: all 0.15s; text-transform: uppercase;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-evaluate:hover { background: #00eeff; }
+  .btn-evaluate:disabled { background: var(--border2); color: var(--muted); cursor: not-allowed; }
+  .spinner { width: 12px; height: 12px; border: 2px solid rgba(0,0,0,0.3); border-top-color: var(--bg); border-radius: 50%; animation: spin 0.6s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── result preview inside drawer ── */
+  .drawer-result {
+    padding: 14px; border: 1px solid var(--border); background: var(--bg);
+    display: none; flex-direction: column; gap: 10px; animation: slide-in 0.3s ease;
+  }
+  .drawer-result.show { display: flex; }
+  .result-top { display: flex; align-items: center; justify-content: space-between; }
+  .result-decision { font-size: 16px; font-weight: 600; letter-spacing: 0.04em; }
+  .result-score { font-size: 11px; color: var(--muted); }
+  .result-explanation { font-size: 11px; line-height: 1.7; color: var(--text); font-family: var(--font-sans); }
+  .result-flags { display: flex; flex-direction: column; gap: 3px; }
+  .result-flag { font-size: 10px; padding: 4px 8px; border-left: 2px solid var(--amber); background: rgba(255,171,64,0.05); }
+  .result-flag.high { border-color: var(--red); background: rgba(255,82,82,0.05); }
 </style>
 </head>
 <body>
 <div class="shell">
 
-  <!-- Header -->
   <header>
     <div class="logo">
       <div class="logo-mark"></div>
@@ -227,7 +278,8 @@
         <span id="status-text">connecting...</span>
       </div>
       <div class="sim-controls">
-        <button id="btn-single" onclick="simulateSingle()">+ Single Txn</button>
+        <button class="btn-submit-txn" onclick="openDrawer()">+ Submit Transaction</button>
+        <button id="btn-single" onclick="simulateSingle()">Random</button>
         <button id="btn-auto" onclick="toggleAuto()">Auto Stream</button>
         <button onclick="clearFeed()">Clear</button>
       </div>
@@ -235,7 +287,6 @@
   </header>
 
   <main>
-    <!-- Metrics -->
     <div class="metrics">
       <div class="metric">
         <div class="metric-label">Total evaluated</div>
@@ -264,7 +315,6 @@
       </div>
     </div>
 
-    <!-- Feed -->
     <div class="feed-panel">
       <div class="panel-header">
         <span>Live transaction feed</span>
@@ -273,12 +323,12 @@
       <div class="feed" id="feed">
         <div class="feed-empty" id="feed-empty">
           No transactions yet.<br>
-          Click <strong>+ Single Txn</strong> or <strong>Auto Stream</strong> to begin.
+          Click <strong>+ Submit Transaction</strong> to evaluate your own,<br>
+          or <strong>Random</strong> to simulate one.
         </div>
       </div>
     </div>
 
-    <!-- Detail -->
     <div class="detail-panel">
       <div class="panel-header">
         <span>Transaction detail</span>
@@ -295,6 +345,132 @@
   </main>
 </div>
 
+<!-- Drawer overlay -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+
+<!-- Drawer -->
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div class="drawer-title">Submit transaction</div>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+
+  <div class="drawer-body">
+
+    <!-- Presets -->
+    <div class="presets">
+      <div class="presets-label">Quick scenarios</div>
+      <div class="preset-grid">
+        <button class="preset-btn" onclick="applyPreset('normal')">
+          <span class="preset-name">Normal purchase</span>
+          <span class="preset-desc">$45 grocery, US, in-store</span>
+        </button>
+        <button class="preset-btn danger" onclick="applyPreset('velocity')">
+          <span class="preset-name">Velocity attack</span>
+          <span class="preset-desc">$2,400 electronics, high speed</span>
+        </button>
+        <button class="preset-btn danger" onclick="applyPreset('geo')">
+          <span class="preset-name">Geo impossible</span>
+          <span class="preset-desc">$1,200 Nigeria, online, CNP</span>
+        </button>
+        <button class="preset-btn warning" onclick="applyPreset('offhours')">
+          <span class="preset-name">Off-hours anomaly</span>
+          <span class="preset-desc">$850 ATM, 3am, card not present</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="form-divider"></div>
+
+    <!-- Form -->
+    <div class="form-grid">
+      <div class="form-field">
+        <label class="form-label">User ID</label>
+        <input class="form-input" id="f-user" placeholder="user_0001" value="user_0001">
+      </div>
+      <div class="form-field">
+        <label class="form-label">Amount (USD)</label>
+        <input class="form-input" id="f-amount" type="number" placeholder="0.00" value="45.00" min="0" step="0.01">
+      </div>
+      <div class="form-field">
+        <label class="form-label">Merchant category</label>
+        <select class="form-input" id="f-category">
+          <option value="grocery">Grocery</option>
+          <option value="restaurant">Restaurant</option>
+          <option value="electronics">Electronics</option>
+          <option value="gas_station">Gas station</option>
+          <option value="atm">ATM</option>
+          <option value="travel">Travel</option>
+          <option value="pharmacy">Pharmacy</option>
+          <option value="retail">Retail</option>
+          <option value="entertainment">Entertainment</option>
+          <option value="subscription">Subscription</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Country</label>
+        <select class="form-input" id="f-country">
+          <option value="US">US — United States</option>
+          <option value="GB">GB — United Kingdom</option>
+          <option value="CA">CA — Canada</option>
+          <option value="DE">DE — Germany</option>
+          <option value="FR">FR — France</option>
+          <option value="AU">AU — Australia</option>
+          <option value="BR">BR — Brazil</option>
+          <option value="NG">NG — Nigeria ⚠</option>
+          <option value="RO">RO — Romania ⚠</option>
+          <option value="CN">CN — China ⚠</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Merchant ID</label>
+        <input class="form-input" id="f-merchant" placeholder="merch_0001" value="merch_0001">
+      </div>
+      <div class="form-field">
+        <label class="form-label">City</label>
+        <input class="form-input" id="f-city" placeholder="New York" value="New York">
+      </div>
+      <div class="form-field full">
+        <label class="form-label">IP Address</label>
+        <input class="form-input" id="f-ip" placeholder="192.168.1.1" value="192.168.1.1">
+      </div>
+      <div class="form-field full">
+        <div class="toggle-row">
+          <span class="toggle-label">Online transaction</span>
+          <label class="toggle-wrap">
+            <input type="checkbox" id="f-online">
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+      </div>
+      <div class="form-field full">
+        <div class="toggle-row">
+          <span class="toggle-label">Card present</span>
+          <label class="toggle-wrap">
+            <input type="checkbox" id="f-card" checked>
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Result preview -->
+    <div class="drawer-result" id="drawer-result">
+      <div class="result-top">
+        <div class="result-decision" id="dr-decision">—</div>
+        <div class="result-score" id="dr-score">score: —</div>
+      </div>
+      <div class="result-flags" id="dr-flags"></div>
+      <div class="result-explanation" id="dr-explanation"></div>
+    </div>
+
+    <button class="btn-evaluate" id="btn-evaluate" onclick="submitCustomTransaction()">
+      Evaluate transaction
+    </button>
+
+  </div>
+</div>
+
 <script>
 const API = 'https://agentic-risk-detection-production.up.railway.app';
 let autoTimer = null;
@@ -302,241 +478,256 @@ let transactions = [];
 let selectedId = null;
 let latencies = [];
 
-// ── Sample transaction templates ──────────────────────────────────────────────
 const USERS = ['user_0001','user_0042','user_0099','user_0137','user_0200','user_0311','user_0422'];
 const MERCHANTS = [
-  {id:'merch_0010', category:'grocery'},
-  {id:'merch_0023', category:'restaurant'},
-  {id:'merch_0042', category:'electronics'},
-  {id:'merch_0055', category:'gas_station'},
-  {id:'merch_0071', category:'atm'},
-  {id:'merch_0088', category:'travel'},
-  {id:'merch_0099', category:'pharmacy'},
+  {id:'merch_0010',category:'grocery'},{id:'merch_0023',category:'restaurant'},
+  {id:'merch_0042',category:'electronics'},{id:'merch_0055',category:'gas_station'},
+  {id:'merch_0071',category:'atm'},{id:'merch_0088',category:'travel'},
+  {id:'merch_0099',category:'pharmacy'},
 ];
 const SCENARIOS = [
-  // Legit
-  () => ({ user_id: rnd(USERS), ...rnd(MERCHANTS).valueOf(), amount: +(Math.random()*80+10).toFixed(2), country:'US', city:'Chicago', ip_address:'192.168.1.1', device_id:'dev_abc', is_online:false, card_present:true }),
-  () => ({ user_id: rnd(USERS), merchant_id:'merch_0023', merchant_category:'restaurant', amount: +(Math.random()*40+8).toFixed(2), country:'US', city:'Austin', ip_address:'10.0.0.1', device_id:'dev_xyz', is_online:false, card_present:true }),
-  // Suspicious
-  () => ({ user_id: rnd(USERS), merchant_id:'merch_0042', merchant_category:'electronics', amount: +(Math.random()*2000+800).toFixed(2), country:'NG', city:'Lagos', ip_address:'197.210.1.1', device_id:'dev_unknown', is_online:true, card_present:false }),
-  () => ({ user_id: rnd(USERS), merchant_id:'merch_0071', merchant_category:'atm', amount: +(Math.random()*1500+500).toFixed(2), country:'RO', city:'Bucharest', ip_address:'89.33.44.55', device_id:'dev_new', is_online:true, card_present:false }),
-  () => ({ user_id: rnd(USERS), merchant_id:'merch_0042', merchant_category:'electronics', amount: +(Math.random()*3000+1000).toFixed(2), country:'US', city:'New York', ip_address:'1.2.3.4', device_id:'dev_abc', is_online:true, card_present:false }),
-  // Mixed
-  () => ({ user_id: rnd(USERS), merchant_id:'merch_0088', merchant_category:'travel', amount: +(Math.random()*600+200).toFixed(2), country:'GB', city:'London', ip_address:'82.10.1.1', device_id:'dev_mob', is_online:true, card_present:false }),
+  ()=>({user_id:rnd(USERS),...rnd(MERCHANTS),amount:+(Math.random()*80+10).toFixed(2),country:'US',city:'Chicago',ip_address:'192.168.1.1',device_id:'dev_abc',is_online:false,card_present:true}),
+  ()=>({user_id:rnd(USERS),merchant_id:'merch_0023',merchant_category:'restaurant',amount:+(Math.random()*40+8).toFixed(2),country:'US',city:'Austin',ip_address:'10.0.0.1',device_id:'dev_xyz',is_online:false,card_present:true}),
+  ()=>({user_id:rnd(USERS),merchant_id:'merch_0042',merchant_category:'electronics',amount:+(Math.random()*2000+800).toFixed(2),country:'NG',city:'Lagos',ip_address:'197.210.1.1',device_id:'dev_unknown',is_online:true,card_present:false}),
+  ()=>({user_id:rnd(USERS),merchant_id:'merch_0071',merchant_category:'atm',amount:+(Math.random()*1500+500).toFixed(2),country:'RO',city:'Bucharest',ip_address:'89.33.44.55',device_id:'dev_new',is_online:true,card_present:false}),
+  ()=>({user_id:rnd(USERS),merchant_id:'merch_0042',merchant_category:'electronics',amount:+(Math.random()*3000+1000).toFixed(2),country:'US',city:'New York',ip_address:'1.2.3.4',device_id:'dev_abc',is_online:true,card_present:false}),
+  ()=>({user_id:rnd(USERS),merchant_id:'merch_0088',merchant_category:'travel',amount:+(Math.random()*600+200).toFixed(2),country:'GB',city:'London',ip_address:'82.10.1.1',device_id:'dev_mob',is_online:true,card_present:false}),
 ];
 
-function rnd(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+const PRESETS = {
+  normal:   {user_id:'user_0001',merchant_id:'merch_0010',merchant_category:'grocery',amount:45.00,country:'US',city:'Chicago',ip_address:'192.168.1.1',device_id:'dev_home',is_online:false,card_present:true},
+  velocity: {user_id:'user_0042',merchant_id:'merch_0042',merchant_category:'electronics',amount:2400.00,country:'US',city:'New York',ip_address:'1.2.3.4',device_id:'dev_unknown',is_online:true,card_present:false},
+  geo:      {user_id:'user_0099',merchant_id:'merch_0071',merchant_category:'atm',amount:1200.00,country:'NG',city:'Lagos',ip_address:'197.210.1.1',device_id:'dev_new',is_online:true,card_present:false},
+  offhours: {user_id:'user_0137',merchant_id:'merch_0071',merchant_category:'atm',amount:850.00,country:'US',city:'Miami',ip_address:'10.0.5.1',device_id:'dev_mob',is_online:true,card_present:false},
+};
 
-// ── API calls ─────────────────────────────────────────────────────────────────
-async function checkHealth() {
-  try {
-    const r = await fetch(`${API}/health`);
-    const d = await r.json();
-    setStatus(d.status === 'ok');
-  } catch { setStatus(false); }
+function rnd(arr){return arr[Math.floor(Math.random()*arr.length)];}
+
+// ── Drawer ────────────────────────────────────────────────────────────────────
+function openDrawer(){
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.getElementById('drawer-result').classList.remove('show');
+}
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('open');
+}
+function applyPreset(name){
+  const p = PRESETS[name];
+  document.getElementById('f-user').value = p.user_id;
+  document.getElementById('f-amount').value = p.amount;
+  document.getElementById('f-category').value = p.merchant_category;
+  document.getElementById('f-country').value = p.country;
+  document.getElementById('f-merchant').value = p.merchant_id;
+  document.getElementById('f-city').value = p.city;
+  document.getElementById('f-ip').value = p.ip_address;
+  document.getElementById('f-online').checked = p.is_online;
+  document.getElementById('f-card').checked = p.card_present;
+  document.getElementById('drawer-result').classList.remove('show');
 }
 
-async function evaluateTransaction(payload) {
-  const r = await fetch(`${API}/evaluate`, {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify(payload),
-  });
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+// ── API ───────────────────────────────────────────────────────────────────────
+async function checkHealth(){
+  try{
+    const r = await fetch(`${API}/health`);
+    const d = await r.json();
+    setStatus(d.status==='ok');
+  }catch{setStatus(false);}
+}
+async function evaluateTransaction(payload){
+  const r = await fetch(`${API}/evaluate`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  if(!r.ok) throw new Error(`HTTP ${r.status}`);
   return r.json();
 }
 
-// ── UI state ──────────────────────────────────────────────────────────────────
-function setStatus(online) {
-  document.getElementById('status-dot').className = 'status-dot' + (online ? '' : ' offline');
-  document.getElementById('status-text').textContent = online ? 'api online' : 'api offline';
+// ── Custom transaction submit ─────────────────────────────────────────────────
+async function submitCustomTransaction(){
+  const btn = document.getElementById('btn-evaluate');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Evaluating...';
+
+  const payload = {
+    user_id:           document.getElementById('f-user').value || 'user_0001',
+    merchant_id:       document.getElementById('f-merchant').value || 'merch_0001',
+    merchant_category: document.getElementById('f-category').value,
+    amount:            parseFloat(document.getElementById('f-amount').value) || 10,
+    country:           document.getElementById('f-country').value,
+    city:              document.getElementById('f-city').value || 'Unknown',
+    ip_address:        document.getElementById('f-ip').value || '0.0.0.0',
+    device_id:         'dev_manual',
+    is_online:         document.getElementById('f-online').checked,
+    card_present:      document.getElementById('f-card').checked,
+  };
+
+  try {
+    const alert = await evaluateTransaction(payload);
+    addToFeed(payload, alert);
+    selectTransaction(alert.transaction_id);
+    renderDrawerResult(alert);
+  } catch(e) {
+    console.error(e);
+    setStatus(false);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'Evaluate transaction';
+  }
 }
 
-function setMetric(id, val, flash=true) {
-  const el = document.getElementById(id);
-  el.textContent = val;
-  if (flash) { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
+function renderDrawerResult(alert){
+  const colors = {approve:'var(--green)',block:'var(--red)',review:'var(--amber)',step_up:'var(--cyan)'};
+  const color = colors[alert.decision] || 'var(--text)';
+  document.getElementById('dr-decision').textContent = alert.decision.toUpperCase();
+  document.getElementById('dr-decision').style.color = color;
+  document.getElementById('dr-score').textContent = `risk score: ${alert.risk_score.toFixed(3)}`;
+  document.getElementById('dr-explanation').textContent = alert.explanation;
+  const flagsEl = document.getElementById('dr-flags');
+  flagsEl.innerHTML = (alert.flags||[]).map(f=>{
+    const isHigh = f.includes('R03')||f.includes('R02');
+    return `<div class="result-flag ${isHigh?'high':''}">${f}</div>`;
+  }).join('');
+  document.getElementById('drawer-result').classList.add('show');
 }
 
-function updateMetrics(alert) {
+// ── UI helpers ────────────────────────────────────────────────────────────────
+function setStatus(online){
+  document.getElementById('status-dot').className='status-dot'+(online?'':' offline');
+  document.getElementById('status-text').textContent=online?'api online':'api offline';
+}
+function setMetric(id,val,flash=true){
+  const el=document.getElementById(id);
+  el.textContent=val;
+  if(flash){el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');}
+}
+function updateMetrics(alert){
   latencies.push(alert.processing_time_ms);
-  const total = transactions.length;
-  const blocks   = transactions.filter(t => t.decision === 'block').length;
-  const approves = transactions.filter(t => t.decision === 'approve').length;
-  const reviews  = transactions.filter(t => t.decision === 'review' || t.decision === 'step_up').length;
-  const avgLat   = Math.round(latencies.reduce((a,b)=>a+b,0)/latencies.length);
-  const pct = n => total ? `${Math.round(n/total*100)}%` : '—';
-
-  setMetric('m-total', total);
-  setMetric('m-approve', approves); document.getElementById('m-approve-pct').textContent = pct(approves);
-  setMetric('m-block', blocks);     document.getElementById('m-block-pct').textContent = pct(blocks);
-  setMetric('m-review', reviews);   document.getElementById('m-review-pct').textContent = pct(reviews);
-  setMetric('m-latency', avgLat);
+  const total=transactions.length;
+  const blocks=transactions.filter(t=>t.decision==='block').length;
+  const approves=transactions.filter(t=>t.decision==='approve').length;
+  const reviews=transactions.filter(t=>t.decision==='review'||t.decision==='step_up').length;
+  const avgLat=Math.round(latencies.reduce((a,b)=>a+b,0)/latencies.length);
+  const pct=n=>total?`${Math.round(n/total*100)}%`:'—';
+  setMetric('m-total',total);
+  setMetric('m-approve',approves);document.getElementById('m-approve-pct').textContent=pct(approves);
+  setMetric('m-block',blocks);document.getElementById('m-block-pct').textContent=pct(blocks);
+  setMetric('m-review',reviews);document.getElementById('m-review-pct').textContent=pct(reviews);
+  setMetric('m-latency',avgLat);
 }
-
-// ── Feed ──────────────────────────────────────────────────────────────────────
-function addToFeed(payload, alert) {
-  const entry = { ...payload, ...alert, _payload: payload };
+function addToFeed(payload,alert){
+  const entry={...payload,...alert,_payload:payload};
   transactions.unshift(entry);
-
   document.getElementById('feed-empty')?.remove();
-  document.getElementById('feed-count').textContent = `${transactions.length} transactions`;
-
-  const feed = document.getElementById('feed');
-  const row = document.createElement('div');
-  row.className = 'txn-row';
-  row.dataset.id = alert.transaction_id;
-
-  const now = new Date();
-  const time = now.toTimeString().slice(0,8);
-  const amtColor = alert.decision === 'block' ? 'var(--red)' : alert.decision === 'approve' ? 'var(--green)' : 'var(--amber)';
-
-  row.innerHTML = `
+  document.getElementById('feed-count').textContent=`${transactions.length} transactions`;
+  const feed=document.getElementById('feed');
+  const row=document.createElement('div');
+  row.className='txn-row';
+  row.dataset.id=alert.transaction_id;
+  const now=new Date();
+  const time=now.toTimeString().slice(0,8);
+  const amtColor=alert.decision==='block'?'var(--red)':alert.decision==='approve'?'var(--green)':'var(--amber)';
+  row.innerHTML=`
     <div class="txn-time">${time}</div>
     <div class="txn-main">
       <div class="txn-user">${payload.user_id}</div>
       <div class="txn-merchant">${payload.merchant_category} · ${payload.country}</div>
     </div>
     <div class="txn-amount" style="color:${amtColor}">$${payload.amount.toFixed(2)}</div>
-    <div class="txn-country" style="color:var(--muted)">${payload.is_online ? 'online' : 'in-store'}</div>
-    <div class="txn-badge badge-${alert.decision}">${alert.decision}</div>
-  `;
-  row.addEventListener('click', () => selectTransaction(alert.transaction_id));
-  feed.insertBefore(row, feed.firstChild);
-
+    <div class="txn-country" style="color:var(--muted)">${payload.is_online?'online':'in-store'}</div>
+    <div class="txn-badge badge-${alert.decision}">${alert.decision}</div>`;
+  row.addEventListener('click',()=>selectTransaction(alert.transaction_id));
+  feed.insertBefore(row,feed.firstChild);
   updateMetrics(alert);
-
-  // Auto-select latest
-  if (!selectedId) selectTransaction(alert.transaction_id);
+  if(!selectedId) selectTransaction(alert.transaction_id);
 }
-
-function selectTransaction(id) {
-  selectedId = id;
-  document.querySelectorAll('.txn-row').forEach(r => r.classList.toggle('selected', r.dataset.id === id));
-  const entry = transactions.find(t => t.transaction_id === id);
-  if (entry) renderDetail(entry);
+function selectTransaction(id){
+  selectedId=id;
+  document.querySelectorAll('.txn-row').forEach(r=>r.classList.toggle('selected',r.dataset.id===id));
+  const entry=transactions.find(t=>t.transaction_id===id);
+  if(entry) renderDetail(entry);
 }
-
-// ── Detail panel ──────────────────────────────────────────────────────────────
-function renderDetail(entry) {
-  document.getElementById('detail-id').textContent = entry.transaction_id.slice(0,8) + '…';
-
-  const decisionColors = { approve: 'var(--green)', block: 'var(--red)', review: 'var(--amber)', step_up: 'var(--cyan)' };
-  const color = decisionColors[entry.decision] || 'var(--text)';
-  const scoreColor = entry.risk_score > 0.7 ? 'var(--red)' : entry.risk_score > 0.35 ? 'var(--amber)' : 'var(--green)';
-
-  const agentRows = (entry.agent_signals || []).map(sig => {
-    const barColor = sig.risk_score > 0.7 ? 'var(--red)' : sig.risk_score > 0.35 ? 'var(--amber)' : 'var(--green)';
+function renderDetail(entry){
+  document.getElementById('detail-id').textContent=entry.transaction_id.slice(0,8)+'…';
+  const colors={approve:'var(--green)',block:'var(--red)',review:'var(--amber)',step_up:'var(--cyan)'};
+  const color=colors[entry.decision]||'var(--text)';
+  const scoreColor=entry.risk_score>0.7?'var(--red)':entry.risk_score>0.35?'var(--amber)':'var(--green)';
+  const agentRows=(entry.agent_signals||[]).map(sig=>{
+    const bc=sig.risk_score>0.7?'var(--red)':sig.risk_score>0.35?'var(--amber)':'var(--green)';
     return `<div class="agent-row">
       <div class="agent-name">${sig.agent_name.replace('_agent','')}</div>
-      <div class="agent-bar-track"><div class="agent-bar-fill" style="width:${Math.round(sig.risk_score*100)}%;background:${barColor}"></div></div>
-      <div class="agent-score-val" style="color:${barColor}">${sig.risk_score.toFixed(3)}</div>
+      <div class="agent-bar-track"><div class="agent-bar-fill" style="width:${Math.round(sig.risk_score*100)}%;background:${bc}"></div></div>
+      <div class="agent-score-val" style="color:${bc}">${sig.risk_score.toFixed(3)}</div>
     </div>`;
   }).join('');
-
-  const flagItems = (entry.flags || []).map(f => {
-    const isHigh = f.includes('R03') || f.includes('R02') || f.includes('high');
+  const flagItems=(entry.flags||[]).map(f=>{
+    const isHigh=f.includes('R03')||f.includes('R02')||f.includes('high');
     return `<div class="flag-item ${isHigh?'high':''}">${f}</div>`;
-  }).join('') || '<div style="font-size:10px;color:var(--muted);padding:4px 0">No flags raised</div>';
-
-  document.getElementById('detail-content').innerHTML = `
+  }).join('')||'<div style="font-size:10px;color:var(--muted);padding:4px 0">No flags raised</div>';
+  document.getElementById('detail-content').innerHTML=`
     <div class="detail-decision">
-      <div>
-        <div class="detail-decision-label">Decision</div>
-        <div class="detail-decision-value" style="color:${color}">${entry.decision.toUpperCase()}</div>
-      </div>
-      <div style="text-align:right">
-        <div class="detail-decision-label">Risk score</div>
-        <div class="detail-decision-value" style="color:${scoreColor}">${entry.risk_score.toFixed(3)}</div>
-      </div>
+      <div><div class="detail-decision-label">Decision</div><div class="detail-decision-value" style="color:${color}">${entry.decision.toUpperCase()}</div></div>
+      <div style="text-align:right"><div class="detail-decision-label">Risk score</div><div class="detail-decision-value" style="color:${scoreColor}">${entry.risk_score.toFixed(3)}</div></div>
     </div>
-
     <div class="detail-score-bar">
-      <div class="score-track">
-        <div class="score-fill" style="width:${Math.round(entry.risk_score*100)}%;background:${scoreColor}"></div>
-      </div>
+      <div class="score-track"><div class="score-fill" style="width:${Math.round(entry.risk_score*100)}%;background:${scoreColor}"></div></div>
       <div class="score-labels"><span>0.0 safe</span><span>0.3</span><span>0.7</span><span>1.0 fraud</span></div>
     </div>
-
     <div class="detail-section">
       <div class="detail-section-title">Agent signals</div>
-      ${agentRows || '<div style="font-size:10px;color:var(--muted)">No agent data</div>'}
+      ${agentRows||'<div style="font-size:10px;color:var(--muted)">No agent data</div>'}
     </div>
-
     <div class="detail-section">
-      <div class="detail-section-title">Flags raised (${entry.flags?.length || 0})</div>
+      <div class="detail-section-title">Flags raised (${entry.flags?.length||0})</div>
       <div class="flags-list">${flagItems}</div>
     </div>
-
     <div class="detail-section">
       <div class="detail-section-title">LLM explanation</div>
-      <div class="explanation-box">${entry.explanation || 'No explanation available.'}</div>
+      <div class="explanation-box">${entry.explanation||'No explanation available.'}</div>
     </div>
-
     <div class="detail-section">
       <div class="detail-section-title">Transaction fields</div>
       <div class="txn-fields">
         <div class="txn-field"><div class="txn-field-key">Amount</div><div class="txn-field-val">$${entry._payload?.amount?.toFixed(2)}</div></div>
         <div class="txn-field"><div class="txn-field-key">Country</div><div class="txn-field-val">${entry._payload?.country}</div></div>
-        <div class="txn-field"><div class="txn-field-key">Channel</div><div class="txn-field-val">${entry._payload?.is_online ? 'Online' : 'In-store'}</div></div>
-        <div class="txn-field"><div class="txn-field-key">Card</div><div class="txn-field-val">${entry._payload?.card_present ? 'Present' : 'Not present'}</div></div>
+        <div class="txn-field"><div class="txn-field-key">Channel</div><div class="txn-field-val">${entry._payload?.is_online?'Online':'In-store'}</div></div>
+        <div class="txn-field"><div class="txn-field-key">Card</div><div class="txn-field-val">${entry._payload?.card_present?'Present':'Not present'}</div></div>
         <div class="txn-field"><div class="txn-field-key">Category</div><div class="txn-field-val">${entry._payload?.merchant_category}</div></div>
         <div class="txn-field"><div class="txn-field-key">Latency</div><div class="txn-field-val">${entry.processing_time_ms}ms</div></div>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
-// ── Controls ──────────────────────────────────────────────────────────────────
-async function simulateSingle() {
-  const btn = document.getElementById('btn-single');
-  btn.disabled = true;
-  try {
-    const scenario = rnd(SCENARIOS);
-    const payload = scenario();
-    const alert = await evaluateTransaction(payload);
-    addToFeed(payload, alert);
+// ── Simulation ────────────────────────────────────────────────────────────────
+async function simulateSingle(){
+  const btn=document.getElementById('btn-single');
+  btn.disabled=true;
+  try{
+    const scenario=rnd(SCENARIOS);
+    const payload=scenario();
+    const alert=await evaluateTransaction(payload);
+    addToFeed(payload,alert);
     selectTransaction(alert.transaction_id);
-  } catch(e) {
-    console.error(e);
-    setStatus(false);
-  } finally {
-    btn.disabled = false;
-  }
+  }catch(e){console.error(e);setStatus(false);}
+  finally{btn.disabled=false;}
+}
+function toggleAuto(){
+  const btn=document.getElementById('btn-auto');
+  if(autoTimer){clearInterval(autoTimer);autoTimer=null;btn.textContent='Auto Stream';btn.classList.remove('active');}
+  else{btn.textContent='Stop Stream';btn.classList.add('active');simulateSingle();autoTimer=setInterval(simulateSingle,2200);}
+}
+function clearFeed(){
+  if(autoTimer)toggleAuto();
+  transactions=[];latencies=[];selectedId=null;
+  document.getElementById('feed').innerHTML='<div class="feed-empty" id="feed-empty">No transactions yet.<br>Click <strong>+ Submit Transaction</strong> to evaluate your own,<br>or <strong>Random</strong> to simulate one.</div>';
+  document.getElementById('feed-count').textContent='0 transactions';
+  document.getElementById('detail-id').textContent='';
+  document.getElementById('detail-content').innerHTML='<div class="detail-empty"><div class="detail-empty-icon">[_]</div><span>Select a transaction</span><span style="font-size:9px">to inspect agent signals</span></div>';
+  ['m-total','m-approve','m-block','m-review'].forEach(id=>setMetric(id,0,false));
+  setMetric('m-latency','—',false);
+  ['m-approve-pct','m-block-pct','m-review-pct'].forEach(id=>document.getElementById(id).textContent='—');
 }
 
-function toggleAuto() {
-  const btn = document.getElementById('btn-auto');
-  if (autoTimer) {
-    clearInterval(autoTimer);
-    autoTimer = null;
-    btn.textContent = 'Auto Stream';
-    btn.classList.remove('active');
-  } else {
-    btn.textContent = 'Stop Stream';
-    btn.classList.add('active');
-    simulateSingle();
-    autoTimer = setInterval(simulateSingle, 2200);
-  }
-}
-
-function clearFeed() {
-  if (autoTimer) toggleAuto();
-  transactions = [];
-  latencies = [];
-  selectedId = null;
-  document.getElementById('feed').innerHTML = '<div class="feed-empty" id="feed-empty">No transactions yet.<br>Click <strong>+ Single Txn</strong> or <strong>Auto Stream</strong> to begin.</div>';
-  document.getElementById('feed-count').textContent = '0 transactions';
-  document.getElementById('detail-id').textContent = '';
-  document.getElementById('detail-content').innerHTML = '<div class="detail-empty"><div class="detail-empty-icon">[_]</div><span>Select a transaction</span><span style="font-size:9px">to inspect agent signals</span></div>';
-  ['m-total','m-approve','m-block','m-review'].forEach(id => setMetric(id, 0, false));
-  setMetric('m-latency', '—', false);
-  ['m-approve-pct','m-block-pct','m-review-pct'].forEach(id => document.getElementById(id).textContent = '—');
-}
-
-// ── Init ──────────────────────────────────────────────────────────────────────
 checkHealth();
-setInterval(checkHealth, 10000);
+setInterval(checkHealth,10000);
 </script>
 </body>
 </html>
